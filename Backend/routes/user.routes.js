@@ -57,5 +57,5 @@ router.post('/login', [
     userController.loginUser // Ensure this function is defined in your controller
 )
 router.get('/profile',authMiddleware.authUser,userController.getUserProfile)
-
+router.get('/logout',authMiddleware.authUser,userController.logoutUser)
 module.exports = router;
