@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require("express-validator");
 const userController = require('../controllers/user.controller');
+const authMiddleware=require('../middlewares/auth.middleware');
 const User = require('../models/user.model'); // Ensure User model is imported for the custom validation
 
 router.post('/register', [
@@ -55,6 +56,6 @@ router.post('/login', [
 ], 
     userController.loginUser // Ensure this function is defined in your controller
 )
-
+router.get('/profile',authMiddleware.authUser,userController.getUserProfile)
 
 module.exports = router;
