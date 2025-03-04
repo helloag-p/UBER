@@ -9,7 +9,9 @@ module.exports.registerCaptain = async (req, res, next) => {
     }
 
     const { fullname, email, password, vehicle } = req.body;
-
+    if (!vehicle || !vehicle.color || !vehicle.plate || !vehicle.capacity || !vehicle.vehicleType) {
+        return res.status(400).json({ message: 'All vehicle fields are required' });
+    }
     // Ensure the 'vehicle' object contains all required fields
     const { color, plate, capacity, vehicleType } = vehicle;
 
@@ -28,10 +30,7 @@ module.exports.registerCaptain = async (req, res, next) => {
         lastname: fullname.lastname,
         email,
         password: hashedPassword, // Use hashed password
-        color,
-        plate,
-        capacity,
-        vehicleType // Pass vehicleType correctly
+        vehicle: { color, plate, capacity, vehicleType }
     });
 
     // Generate token for the captain
@@ -76,6 +75,12 @@ module.exports.getCaptainProfile= async(req,res,next)=>{
 module.exports.logoutCaptain= async(req,res,next)=>{
     res.clearCookie('token');
     const token=req.cookies.token || req.headers.authorization?.split(' ')[ 1 ];
-    await blackListTokenModel.create({ token });
+    if (!token) {
+        return res.status(400).json({ message: 'No token provided' });
+    }
+    const existingToken = await blackListTokenModel.findOne({ token });
+    if(!existingToken){
+        await blackListTokenModel.create({ token });
+    }
     res.status(200).json({ message :'Logged out'});
 } 
