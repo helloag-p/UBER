@@ -3,6 +3,10 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import LocationPanel from '../Components/LocationPanel'
 import { Link } from 'react-router-dom'
+import VehiclePanel from '../Components/VehiclePanel'
+import ConfirmRide from '../Components/ConfirmRide'
+import Lookingfordriver from '../Components/Lookingfordriver'
+import waitfordriver from '../Components/waitfordriver'
 
 
 
@@ -12,8 +16,15 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false)
   const panelRef = useRef(null)
   const panelCloseRef = useRef(null)
-  const vehiclePanelRef=useRef(null)
+  const vehiclePanelRef = useRef(null)
+  const confirmRidePanelRef = useRef(null)
+  const waitingForDriverRef = useRef(null)
+  const vehicleFoundRef = useRef(null)
+
   const [vehiclePanel, setVehiclePanel] = useState(false)
+  const [confirmRidePanel, setconfirmRidePanel] = useState(false)
+  const [vehicleFound, setVehicleFound] = useState(false)
+  const [waitingForDriver, setWaitingForDriver] = useState(false)
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -39,21 +50,66 @@ const Home = () => {
       })
     }
   }, [panelOpen])
-  useGSAP(function(){
-    if(vehiclePanel){
-      gsap.to(vehiclePanelRef.current,{
-        transform:'translateY(0%)'
+  useGSAP(function () {
+    if (vehiclePanel) {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(0%)'
       }
-  
+
       )
     }
     else {
-      gsap.to(vehiclePanelRef.current,{
-        transform:'translateY(100%)'
-      } )
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
     }
-    
-  },[vehiclePanel])
+
+  }, [vehiclePanel])
+  useGSAP(function () {
+    if (confirmRidePanel) {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(0%)'
+      }
+
+      )
+    }
+    else {
+      gsap.to(confirmRidePanelRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+
+  }, [confirmRidePanel])
+  useGSAP(function () {
+    if (vehicleFound) {
+      gsap.to(vehicleFoundRef.current, {
+        transform: 'translateY(0%)'
+      }
+
+      )
+    }
+    else {
+      gsap.to(vehicleFoundRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+
+  }, [vehicleFound])
+  useGSAP(function () {
+    if (waitingForDriver) {
+      gsap.to(waitingForDriverRef.current, {
+        transform: 'translateY(0%)'
+      }
+
+      )
+    }
+    else {
+      gsap.to(waitingForDriverRef.current, {
+        transform: 'translateY(100%)'
+      })
+    }
+
+  }, [waitingForDriver])
 
 
   return (
@@ -95,15 +151,31 @@ const Home = () => {
           </form>
         </div>
         <div ref={panelRef} className='bg-white h-0'>
-          <LocationPanel vehiclePanel={vehiclePanel} setVehiclePanel={setVehiclePanel} />
+          <LocationPanel setPanelOpen={setPanelOpen} setVehiclePanel={setVehiclePanel} />
         </div>
 
       </div>
-      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 -translate-y-full bg-white px-3 py-8'>
-      
+      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 -translate-y-full bg-white px-3 py-10 pt-12'>
 
+        <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setVehiclePanel={setVehiclePanel} />
 
       </div>
+
+      <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 -translate-y-full bg-white px-3 py-6 pt-14'>
+
+        <ConfirmRide setConfirmRidePanel={setconfirmRidePanel} setVehicleFound={setVehicleFound} />
+
+      </div>
+
+      <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 -translate-y-full bg-white px-3 py-6 pt-14'>
+        <Lookingfordriver setVehicleFound={setVehicleFound} />
+      </div>
+      <div ref={waitingForDriverRef} className='fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12'>
+                <waitfordriver
+                    setVehicleFound={setVehicleFound}
+                    setWaitingForDriver={setWaitingForDriver}
+                    waitingForDriver={waitingForDriver} />
+            </div>
 
     </div>
   )
