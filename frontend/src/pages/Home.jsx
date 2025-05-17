@@ -20,7 +20,6 @@ const Home = () => {
   const confirmRidePanelRef = useRef(null)
   const waitingForDriverRef = useRef(null)
   const vehicleFoundRef = useRef(null)
-
   const [vehiclePanel, setVehiclePanel] = useState(false)
   const [confirmRidePanel, setconfirmRidePanel] = useState(false)
   const [vehicleFound, setVehicleFound] = useState(false)
@@ -114,7 +113,7 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-16 absolute left-5 top-5' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+<img       className='w-16 absolute left-5 top-5' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
       <div className='h-screen w-screen'>
         {/* image for temporary use  */}
       </div>
