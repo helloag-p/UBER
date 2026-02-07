@@ -21,7 +21,7 @@ const  CaptainProtectWrapper = ({
         }).then((response)=>{
             if(response.status===200){
                 const data=response.data
-                setCaptain(data.captain)
+                setCaptain(data)
                 setIsLoading(false)
             }
         })

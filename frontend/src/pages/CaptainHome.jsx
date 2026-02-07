@@ -5,12 +5,57 @@ import RidePopUp from '../Components/RidePopUp'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ConfirmRidePopUp from '../Components/ConfirmRidePopUp'
-
+import { useEffect,useContext } from 'react'
+import { SocketContext } from '../context/SocketContext'
+import { CaptainDataContext } from '../context/CaptainContext'
+import axios from 'axios'
 const CaptainHome = () => {
   const [ridePopupPanel , setRidePopupPanel]=useState(true);
+  const [ride,setRide]=useState(null);
   const [confirmridePopupPanel , setconfirmRidePopupPanel]=useState(false);
   const ridePopupPanelRef=useRef(null)
   const confirmridePopupPanelRef=useRef(null)
+  const {socket} = useContext(SocketContext);
+  const {captain} = useContext(CaptainDataContext);
+  useEffect(()=>{
+     if (!captain || !captain._id || !socket) return;
+    socket.emit("join", {
+      userId: captain._id,
+      userType: "captain"
+    });
+    const updateLocation = ()=>{
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(position=>{
+          
+          
+          socket.emit("update-location-captain",{
+            userId:captain._id,
+            location:{
+               lat: position.coords.latitude,
+               lng: position.coords.longitude
+            },
+          });
+        });
+      }
+    };
+    updateLocation();
+
+    const locationInterval = setInterval(updateLocation,10000);
+    return () => clearInterval(locationInterval);
+  },[captain,socket]);
+  
+  useEffect(()=>{
+    if(!socket) return;
+    const handleNewRide = (data)=>{ 
+      setRide(data);
+      setRidePopupPanel(true);
+    }
+    socket.on("new-ride",handleNewRide);
+    return ()=>{
+      socket.off("new-ride",handleNewRide);
+    }
+  },[socket]);
+  
   useGSAP(function () {
     if (ridePopupPanel) {
       gsap.to(ridePopupPanelRef.current, {
@@ -46,7 +91,7 @@ const CaptainHome = () => {
         <i className='text-lg font-medium ri-logout-box-r-line'></i>
       </Link>
       <div className='h-3/5 '>
-
+      <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
       </div>
       <div className='h-2/5 p-6'>
         <CaptainDetails  />
