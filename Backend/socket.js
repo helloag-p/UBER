@@ -21,9 +21,9 @@ function initializeSocket(server) {
       if (!userId || !userType) return;
 
       if (userType === 'user') {
-        await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
+        await userModel.findByIdAndUpdate(userId, { socketid: socket.id });
       } else if (userType === 'captain') {
-        await captainModel.findByIdAndUpdate(userId, { socketId: socket.id });
+        await captainModel.findByIdAndUpdate(userId, { socketid: socket.id });
       }
     });
 
@@ -39,16 +39,16 @@ function initializeSocket(server) {
     });
 
     socket.on('disconnect', async () => {
-      await userModel.updateOne({ socketId: socket.id }, { $unset: { socketId: "" } });
-      await captainModel.updateOne({ socketId: socket.id }, { $unset: { socketId: "" } });
+      await userModel.updateOne({ socketid: socket.id }, { $unset: { socketid: "" } });
+      await captainModel.updateOne({ socketid: socket.id }, { $unset: { socketid: "" } });
       console.log(`Client disconnected: ${socket.id}`);
     });
   });
 }
 
-const sendMessageToSocketId = (socketId, messageObject) => {
-  if (!socketId || !io) return;
-  io.to(socketId).emit(messageObject.event, messageObject.data);
+const sendMessageToSocketId = (socketid, messageObject) => {
+  if (!socketid || !io) return;
+  io.to(socketid).emit(messageObject.event, messageObject.data);
 };
 
 module.exports = { initializeSocket, sendMessageToSocketId };
