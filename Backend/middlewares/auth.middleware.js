@@ -1,5 +1,5 @@
 const userModel=require('../models/user.model');
-const captainModel=require('../models/captain.models');
+const captainModel=require('../models/captain.model');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 
