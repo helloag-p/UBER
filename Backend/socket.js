@@ -32,9 +32,10 @@ function initializeSocket(server) {
 
       await captainModel.findByIdAndUpdate(userId, {
         location: {
-          lat: location.lat,
-          lng: location.lng
-        }
+    type: "Point",
+    coordinates: [location.lng, location.lat]
+  },
+  status: "active"
       });
     });
 
