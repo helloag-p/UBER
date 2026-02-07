@@ -62,7 +62,7 @@ const captainsch=new mongoose.Schema({
 
     },
     location:{
-        ltd:{
+        lat:{
             type:Number,
         },
         lng:{

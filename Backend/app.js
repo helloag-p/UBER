@@ -13,7 +13,13 @@ const captainRoutes=require('./routes/captain.routes');
 const mapRoutes=require('./routes/maps.routes');
 const rideRoutes=require('./routes/ride.routes');
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.get('/',(req,res)=>{
@@ -25,5 +31,7 @@ app.use('/captains',captainRoutes);
 app.use('/maps',mapRoutes);
 app.use('/rides',rideRoutes);
 
-const port=process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+module.exports=app;
+
+// const port=process.env.PORT || 3000;
+// app.listen(port, () => console.log(`Server running on port ${port}`));
