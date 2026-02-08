@@ -34,8 +34,7 @@ const Captainsignup = () => {
         vehicleType
       }
     };
-  
-    console.log("Sending data:", JSON.stringify(newCaptain, null, 2));
+
   
     try {
       const response = await axios.post(
@@ -43,7 +42,7 @@ const Captainsignup = () => {
         newCaptain
       );
   
-      console.log("Response:", response.data);
+      // console.log("Response:", response.data);
   
       if (response.status === 201) {
         setCaptain(response.data.captain);

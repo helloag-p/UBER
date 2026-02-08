@@ -40,28 +40,51 @@ const Home = () => {
   const {socket} = useContext(SocketContext);
   const {user} = useContext(UserDataContext);
   const [ride,setRide] = useState(null);
+//   useEffect(() => {
+//   if (waitingForDriver) {
+//     setVehicleFound(false);
+//   }
+// }, [waitingForDriver]);
+
+  useEffect(() => {
+  if (!socket || !user?._id) return;
+
+  socket.emit("join", {
+    userType: "user",
+    userId: user._id
+  });
+}, [socket, user]);
+
   
-  useEffect(()=>{
-    socket.emit("join",{userType: "user",userId: user._id})
-  },[user]);
+ useEffect(() => {
+  if (!socket) return;
   
-  socket.on("ride-confirmed",(ride)=>{
-    setVehicleFound(false);
-    setWaitingForDriver(true);
-    setRide(ride);
-  })
+  const handleRideConfirmed = (ride) => {
+     console.log("✅ ride-confirmed received", ride);
+     setConfirmRidePanel(false);
+     setVehicleFound(false);
+     setRide(ride);
+     setWaitingForDriver(true);
+     
+    
+    
+  };
+
+  socket.on("ride-confirmed", handleRideConfirmed);
+
+  return () => {
+    socket.off("ride-confirmed", handleRideConfirmed);
+  };
+}, [socket]);
   
-  socket.on("ride-started",ride=>{
-    setWaitingForDriver(false);
-    navigate("/riding", {state: {ride}});
-  })
+  
   
   const submitHandler = (e) => {
     e.preventDefault();
   };
   
   useGSAP(() => {
-    if (!panelRef.current) return;
+    // if (!panelRef.current) return;
     if (panelOpen) {
       gsap.to(panelRef.current, {
         height: "70%",
@@ -82,7 +105,7 @@ const Home = () => {
   }, [panelOpen]);
   
   useGSAP(()=>{
-    if (!vehiclePanelRef.current) return;
+    // if (!vehiclePanelRef.current) return;
     if(vehiclePanelOpen){
        gsap.to(vehiclePanelRef.current,{
          transform: "translateY(0)"
@@ -108,7 +131,7 @@ const Home = () => {
   },[confirmRidePanel]);
   
   useGSAP(()=>{
-    if (!vehicleFoundRef.current) return;
+    // if (!vehicleFoundRef.current) return;
     if(vehicleFound){
        gsap.to(vehicleFoundRef.current,{
          transform: "translateY(0)"
@@ -120,8 +143,20 @@ const Home = () => {
     }
   },[vehicleFound])
   
-    useGSAP(()=>{
-      if (!waitingForDriverRef.current) return;
+//     useGSAP(() => {
+//   if (!waitingForDriverRef.current) return;
+
+//   if (waitingForDriver) {
+//     gsap.to(waitingForDriverRef.current, {
+//       transform: "translateY(0%)"
+//     });
+//   } else {
+//     gsap.to(waitingForDriverRef.current, {
+//       transform: "translateY(100%)"
+//     });
+//   }
+// }, [waitingForDriver]);
+ useGSAP(()=>{
     if(waitingForDriver){
        gsap.to(waitingForDriverRef.current,{
          transform: "translateY(0)"
@@ -329,7 +364,7 @@ const Home = () => {
           />
         </div>
         
-        <div ref={waitingForDriverRef} className="fixed z-10 translate-y-full bottom-0 w-full md:max-w-md bg-white px-3 md:px-4 py-5 md:py-6 pt-10 md:pt-12 rounded-t-2xl shadow-2xl">
+        <div ref={waitingForDriverRef} className="fixed z-10 translate-y-[100%] bottom-0 w-full md:max-w-md bg-white px-3 md:px-4 py-5 md:py-6 pt-10 md:pt-12 rounded-t-2xl shadow-2xl">
           <WaitingForDriver
             ride={ride}
             setWaitingForDriver={setWaitingForDriver}

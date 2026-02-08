@@ -8,26 +8,34 @@ import axios from 'axios'
 const Captainlogin = () => {
   const [email,setEmail]= useState('')
   const [password,setPassword]= useState('')
-  const [captainData,setCaptainData]=useState('')
   const navigate=useNavigate()
   const {captain,setCaptain}=useContext(CaptainDataContext)
 
   
-  const submitHandler=async(e)=>{
-      e.preventDefault();
-      setCaptainData({
-        email:email,
-        password:password
-      })
-      const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`,captainData)
-      if(response.status===200){
-        const data=await response.data
-        setCaptain(data.captain)
-        localStorage.setItem('token',data.token)
-        navigate('/captainhome')
+  const submitHandler = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/login`,
+      {
+        email,
+        password
       }
-      setPassword('');
-    }
+    );
+
+    const data = response.data;
+    setCaptain(data.captain);
+    localStorage.setItem("token", data.token);
+    navigate("/captainhome");
+
+  } catch (err) {
+    console.error(err.response?.data);
+    alert(err.response?.data?.message || "Login failed");
+  }
+
+  setPassword("");
+};
   return (
     <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
