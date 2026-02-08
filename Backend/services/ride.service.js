@@ -164,13 +164,6 @@ const startRide = async ({ rideId, otp, captain }) => {
     if (ride.otp !== otp) {
         throw new Error("Invalid OTP");
     }
-    // const updatedRide = await rideModel.findOneAndUpdate(
-    //     { _id: rideId },
-    //     { status: "ongoing" },
-    //     { new: true } 
-    // ).populate("user").populate("captain");
-
-    // return updatedRide;
     await rideModel.findOneAndUpdate({_id: rideId},{
     status: "ongoing"
   })
