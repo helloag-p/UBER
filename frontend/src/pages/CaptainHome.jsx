@@ -8,6 +8,7 @@ import ConfirmRidePopUp from '../Components/ConfirmRidePopUp'
 import { useEffect,useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
+import LiveTracking from '../Components/LiveTracking'
 import axios from 'axios'
 const CaptainHome = () => {
   const [ridePopupPanel , setRidePopupPanel]=useState(false);
@@ -100,17 +101,30 @@ const CaptainHome = () => {
 
   }, [confirmridePopupPanel])
   return (
-    <div className='h-screen'>
-      <img className='w-16 absolute left-5 top-5' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt='' />
-      <Link to='/home' className=' fixed right-2 top-2 1 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-        <i className='text-lg font-medium ri-logout-box-r-line'></i>
-      </Link>
-      <div className='h-3/5 '>
-      <img className='h-full w-full object-cover' src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
-      </div>
-      <div className='h-2/5 p-6'>
-        <CaptainDetails  />
-      </div>
+    <div className='h-screen overflow-hidden flex flex-col '>
+      <div className='fixed top-0 left-0 w-full p-5 flex justify-between items-start z-[1000] pointer-events-none'>
+                <img 
+                    className='pl-4 py-2 w-16 pointer-events-auto' 
+                    src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" 
+                    alt='Uber Logo' 
+                />
+                <Link 
+                    to='/home' 
+                    className='h-10 w-10 bg-white flex items-center justify-center rounded-full shadow-xl pointer-events-auto'
+                >
+                    <i className='text-lg font-medium ri-logout-box-r-line'></i>
+                </Link>
+            </div>
+
+        {/* MAP SECTION - 60% */}
+        <div className='h-3/5 w-full relative z-0'>
+            <LiveTracking />
+        </div>
+
+        {/* DETAILS SECTION - 40% */}
+        <div className='h-2/5 p-6 bg-white z-10 shadow-[0_-5px_15px_rgba(0,0,0,0.1)]'>
+            <CaptainDetails />
+        </div>
       <div ref={ridePopupPanelRef} className='fixed w-full z-10 bottom-0 -translate-y-full bg-white px-3 py-6 pt-14'>
     <RidePopUp 
      ride={ride}

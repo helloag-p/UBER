@@ -13,7 +13,7 @@ import {SocketContext} from "../context/SocketContext";
 
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-// import LiveTracking from "../components/Livetracking";
+import LiveTracking from "../Components/LiveTracking";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,11 +40,7 @@ const Home = () => {
   const {socket} = useContext(SocketContext);
   const {user} = useContext(UserDataContext);
   const [ride,setRide] = useState(null);
-//   useEffect(() => {
-//   if (waitingForDriver) {
-//     setVehicleFound(false);
-//   }
-// }, [waitingForDriver]);
+
 
   useEffect(() => {
   if (!socket || !user?._id) return;
@@ -60,7 +56,6 @@ const Home = () => {
   if (!socket) return;
   
   const handleRideConfirmed = (ride) => {
-     console.log("✅ ride-confirmed received", ride);
      setConfirmRidePanel(false);
      setVehicleFound(false);
      setRide(ride);
@@ -262,20 +257,26 @@ const Home = () => {
 
   return (
     <div className="h-screen relative overflow-hidden flex justify-center items-center bg-gray-50">
+       
       <div className="h-screen w-full md:max-w-md relative overflow-hidden bg-white md:shadow-2xl">
-        
-        <div className="fixed p-3 md:p-4 top-0 flex justify-end items-center w-full md:max-w-md z-[99999] pointer-events-none">
+       
+<div className="fixed p-3 md:p-4 top-0 flex justify-end items-center w-full md:max-w-md z-[1000] pointer-events-none">
           <Link
             to="/logout"
-            
-            className="w-9 h-9 md:w-10 md:h-10 bg-white flex justify-center items-center rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:bg-gray-50 active:scale-95 pointer-events-auto"
+            className="w-9 h-9 md:w-10 md:h-10 bg-white flex justify-center items-center rounded-full shadow-md hover:shadow-lg transition-all duration-200 pointer-events-auto"
           >
             <i className="text-base md:text-lg ri-logout-box-r-line"></i>
           </Link>
         </div>
+
+        {/* MAP SECTION - Lower Z-Index but must be interactive */}
+        <div className="absolute inset-0 z-0 h-screen w-full">
+           <LiveTracking />
+        </div>
+        
       
         
-        <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
+        <div className="flex flex-col justify-end h-screen absolute top-0 w-full z-10 pointer-events-auto">
           <div className="bg-white relative w-full p-4 md:p-5 pb-5 md:pb-6 shadow-lg">
            
             
