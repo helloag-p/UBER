@@ -66,6 +66,7 @@ const CaptainHome = () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
     });
+    setRide(response.data);
     setRidePopupPanel(false);
     setconfirmRidePopupPanel(true);
   }
@@ -118,7 +119,9 @@ const CaptainHome = () => {
      />
       </div>
       <div ref={confirmridePopupPanelRef  } className='fixed w-full h-screen z-10 bottom-0 -translate-y-full bg-white px-3 py-6 pt-14'>
-    <ConfirmRidePopUp setconfirmRidePopupPanel={setconfirmRidePopupPanel} setRidePopupPanel={setRidePopupPanel}/>
+    <ConfirmRidePopUp ride={ride}
+     setconfirmRidePopupPanel={setconfirmRidePopupPanel} 
+     setRidePopupPanel={setRidePopupPanel}/>
       </div>
     </div>
   )

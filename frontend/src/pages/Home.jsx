@@ -77,8 +77,24 @@ const Home = () => {
   };
 }, [socket]);
   
-  
-  
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRideStarted = (ride) => {
+        setWaitingForDriver(false);
+        navigate("/riding",{
+          state: {
+            ride
+          }
+        });
+    };
+
+    socket.on("ride-started", handleRideStarted);
+
+    return () => {
+        socket.off("ride-started", handleRideStarted);
+    };
+}, [socket]);
   const submitHandler = (e) => {
     e.preventDefault();
   };
@@ -142,20 +158,8 @@ const Home = () => {
        })
     }
   },[vehicleFound])
-  
-//     useGSAP(() => {
-//   if (!waitingForDriverRef.current) return;
 
-//   if (waitingForDriver) {
-//     gsap.to(waitingForDriverRef.current, {
-//       transform: "translateY(0%)"
-//     });
-//   } else {
-//     gsap.to(waitingForDriverRef.current, {
-//       transform: "translateY(100%)"
-//     });
-//   }
-// }, [waitingForDriver]);
+
  useGSAP(()=>{
     if(waitingForDriver){
        gsap.to(waitingForDriverRef.current,{
@@ -183,7 +187,8 @@ const Home = () => {
           {
             params: { input: pickup },
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`,
+              
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
@@ -212,7 +217,7 @@ const Home = () => {
           {
             params: { input: destination },
             headers: {
-              Authorization: `bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
@@ -235,7 +240,7 @@ const Home = () => {
     
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`,{
       params: {pickup, destination},
-      headers: {Authorization: `bearer ${localStorage.getItem("token")}`}
+      headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
     })
     
     setFare(response.data);
@@ -248,7 +253,7 @@ const Home = () => {
       destination
     },{
       headers: {
-        Authorization: `bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       }
     })
   }
