@@ -6,7 +6,7 @@ import "remixicon/fonts/remixicon.css";
 import LocationSearchPanel from "../Components/LocationPanel";
 import VehiclePanel from "../Components/VehiclePanel";
 import ConfirmRide from "../Components/ConfirmRide";
-import LookingForDriver from "../Components/LookingForDriver";
+import LookingForDriver from "../Components/LookingFordriver";
 import WaitingForDriver from "../Components/waitfordriver";
 import { UserDataContext } from "../context/UserContext";
 import {SocketContext} from "../context/SocketContext";
