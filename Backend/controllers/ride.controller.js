@@ -22,7 +22,7 @@ const captainsInRadius = await mapService.getCaptainsInTheRadius(
     console.log("Captains in radius:", captainsInRadius);
     const rideWithUser = await rideModel.findOne({_id: ride._id}).populate("user");
     captainsInRadius.map(captain=>{
-        sendMessageToSocketId(captain.socketId,{
+        sendMessageToSocketId(captain.socketid,{
             event: "new-ride",
             data: rideWithUser
 
@@ -56,28 +56,43 @@ module.exports.getFare = async(req,res)=>{
     res.status(500).json({message: error.message})
    }
 }
-module.exports.confirmRide = async (req,res)=>{
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
-    }
-    const {rideId} = req.body;
-    try {
-        const ride = await rideService.confirmRide({rideId, captain: req.captain});
-        sendMessageToSocketId(ride.user.socketId,{
-            event: "ride-confirmed",
-            data:ride
-        })
-        return res.status(200).json(ride);
+// module.exports.confirmRide = async (req, res) => {
+//   const { rideId } = req.body;
 
-        
-    } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({message: error.message})
-        
-    }
+//   const ride = await rideService.confirmRide({
+//     rideId,
+//     captain: req.captain
+//   });
+// //   const populatedRide = await rideModel
+// //     .findById(ride._id)
+// //     .populate("user")
+// //     .populate("captain");
 
-}
+//   sendMessageToSocketId(populatedRide.user.socketid, {
+//     event: "ride-confirmed",
+//     data: populatedRide
+//   });
+
+//   return res.status(200).json(populatedRide);
+// };
+module.exports.confirmRide = async (req, res) => {
+    const { rideId } = req.body;
+    const ride = await rideService.confirmRide({
+  rideId,
+  captain: req.captain
+});
+
+sendMessageToSocketId(
+  ride.user.socketid,
+  {
+    event: "ride-confirmed",
+    data: ride
+  }
+);
+
+return res.status(200).json(ride);
+};
+
 module.exports.startRide = async(req,res)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){

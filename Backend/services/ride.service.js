@@ -115,20 +115,34 @@ const createRide = async ({
   });
   return ride;
 };
-const confirmRide = async ({rideId, captain})=>{
-  if(!rideId){
-    throw new Error("Ride id is required")
-  }
-  await rideModel.findOneAndUpdate({_id: rideId},{
-     status: "accepted",
-     captain: captain._id
-  })
-  const ride = await rideModel.findOne({_id: rideId}).populate("user").populate("captain").select("+otp");
-  if(!ride){
-    throw new Error("Ride not found");
-  }
-  return ride;
-}
+const confirmRide = async ({ rideId, captain }) => {
+    if (!rideId) {
+        throw new Error("Ride id is required");
+    }
+
+    // 1. Update the ride status and assign the captain
+    await rideModel.findOneAndUpdate(
+        { _id: rideId },
+        {
+            status: "accepted",
+            captain: captain._id,
+        }
+    );
+
+    // 2. Fetch the ride again with full population to ensure 
+    // all captain and user details are loaded for the socket/frontend
+    const ride = await rideModel
+        .findOne({ _id: rideId })
+        .populate("user")
+        .populate("captain")
+        .select("+otp");
+
+    if (!ride) {
+        throw new Error("Ride not found");
+    }
+
+    return ride;
+};
 const startRide = async ({rideId, otp, captain})=>{
   if(!rideId || !otp){
     throw new Error("RideId and Otp are required")
