@@ -56,25 +56,6 @@ module.exports.getFare = async(req,res)=>{
     res.status(500).json({message: error.message})
    }
 }
-// module.exports.confirmRide = async (req, res) => {
-//   const { rideId } = req.body;
-
-//   const ride = await rideService.confirmRide({
-//     rideId,
-//     captain: req.captain
-//   });
-// //   const populatedRide = await rideModel
-// //     .findById(ride._id)
-// //     .populate("user")
-// //     .populate("captain");
-
-//   sendMessageToSocketId(populatedRide.user.socketid, {
-//     event: "ride-confirmed",
-//     data: populatedRide
-//   });
-
-//   return res.status(200).json(populatedRide);
-// };
 module.exports.confirmRide = async (req, res) => {
     const { rideId } = req.body;
     const ride = await rideService.confirmRide({
@@ -101,8 +82,11 @@ module.exports.startRide = async(req,res)=>{
     const {rideId, otp} = req.query;
     try {
      const ride = await rideService.startRide({rideId, otp, captain: req.captain});
-     sendMessageToSocketId(ride.user.socketId, {
-        event: "ride-started",
+
+     console.log("Ride started:", ride);
+
+     sendMessageToSocketId(ride.user.socketid, {
+        event: 'ride-started',
         data: ride
      })
      return res.status(200).json(ride);
@@ -121,7 +105,7 @@ module.exports.endRide = async(req,res)=>{
     const {rideId} = req.body;
     try{
         const ride = await rideService.endRide({rideId,captain: req.captain});
-    sendMessageToSocketId(ride.user.socketId,{
+    sendMessageToSocketId(ride.user.socketid,{
         event: "ride-ended",
         data: ride
     });

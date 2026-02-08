@@ -1,3 +1,4 @@
+const { eventNames } = require("cluster");
 const rideModel = require("../models/ride.model");
 const mapService = require("../services/maps.service");
 const bcrypt = require('bcrypt');
@@ -143,25 +144,38 @@ const confirmRide = async ({ rideId, captain }) => {
 
     return ride;
 };
-const startRide = async ({rideId, otp, captain})=>{
-  if(!rideId || !otp){
-    throw new Error("RideId and Otp are required")
-  }
-  const ride = await rideModel.findOne({_id: rideId}).populate("user").populate("captain").select("+otp");
-  if(!ride){
-    throw new Error("Ride not found")
-  }
-  if(ride.status != "accepted"){
-    throw new Error("Ride not Accepted");
-  }
-  if(ride.otp!=otp){
-    throw new Error("Entered Wrong OTP");
-  }
-  await rideModel.findOneAndUpdate({_id: rideId},{
+const startRide = async ({ rideId, otp, captain }) => {
+    if (!rideId || !otp) {
+        throw new Error("RideId and Otp are required");
+    }
+
+    const ride = await rideModel.findOne({ _id: rideId })
+        .populate("user")
+        .populate("captain")
+        .select("+otp");
+
+    if (!ride) {
+        throw new Error("Ride not found");
+    }
+    if (ride.status !== "accepted" && ride.status !== "ongoing") {
+        throw new Error("Ride not in a valid state to start");
+    }
+
+    if (ride.otp !== otp) {
+        throw new Error("Invalid OTP");
+    }
+    // const updatedRide = await rideModel.findOneAndUpdate(
+    //     { _id: rideId },
+    //     { status: "ongoing" },
+    //     { new: true } 
+    // ).populate("user").populate("captain");
+
+    // return updatedRide;
+    await rideModel.findOneAndUpdate({_id: rideId},{
     status: "ongoing"
   })
   return ride;
-}
+};
 const endRide = async({rideId, captain})=>{
   if(!rideId){
     throw new Error("RideId is required")
