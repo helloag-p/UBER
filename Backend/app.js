@@ -15,7 +15,7 @@ const rideRoutes=require('./routes/ride.routes');
 
 app.use(
   cors({
-    origin: true,
+    origin: 'https://uber-nine-ashen.vercel.app',
     credentials: true,
   })
 );
