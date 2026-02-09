@@ -6,7 +6,7 @@ import "remixicon/fonts/remixicon.css";
 import LocationSearchPanel from "../Components/LocationPanel";
 import VehiclePanel from "../Components/VehiclePanel";
 import ConfirmRide from "../Components/ConfirmRide";
-import LookingForDriver from "../Components/LookingFordriver";
+import LookingForDriver from "../Components/Lookingfordriver";
 import WaitingForDriver from "../Components/waitfordriver";
 import { UserDataContext } from "../context/UserContext";
 import {SocketContext} from "../context/SocketContext";
@@ -116,7 +116,6 @@ const Home = () => {
   }, [panelOpen]);
   
   useGSAP(()=>{
-    // if (!vehiclePanelRef.current) return;
     if(vehiclePanelOpen){
        gsap.to(vehiclePanelRef.current,{
          transform: "translateY(0)"
@@ -142,7 +141,6 @@ const Home = () => {
   },[confirmRidePanel]);
   
   useGSAP(()=>{
-    // if (!vehicleFoundRef.current) return;
     if(vehicleFound){
        gsap.to(vehicleFoundRef.current,{
          transform: "translateY(0)"
