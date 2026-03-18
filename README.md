@@ -1,6 +1,11 @@
-# UberClone - Ride Sharing Application
+# 🚗 OPQ (Uber Clone) - Real-Time Ride-Hailing Platform
 
-A full-stack ride-sharing application built with **Node.js/Express** backend and **React/Vite** frontend with real-time features using WebSockets.
+**[🔴 LIVE DEMO: Click Here to View the App](https://uber-nine-ashen.vercel.app/)**
+*(Note: Please allow 30-50 seconds for the initial load as the free-tier backend spins up).*
+
+> **Disclaimer:** This is a portfolio project created solely for educational purposes to demonstrate full-stack development and real-time WebSocket capabilities. It is not affiliated with, endorsed by, or connected to Uber in any way.
+
+A production-ready, full-stack ride-sharing application built with a **Node.js/Express** backend and a **React/Vite** frontend, featuring low-latency bidirectional data flow for active ride sessions using **Socket.IO**.
 
 ---
 
